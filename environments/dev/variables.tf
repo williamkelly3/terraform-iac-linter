@@ -1,0 +1,20 @@
+variable "location" {
+  description = "The Azure region to deploy to."
+  type        = string
+  default     = "eastus"
+}
+
+variable "resource_group_name" {
+  description = "The name of the resource group."
+  type        = string
+  default     = "rg-dev-resources"
+}
+
+variable "tags" {
+  description = "Tags to apply to resources."
+  type        = map(string)
+  default = {
+    environment = "dev"
+    owner       = "w.kelly"
+  }
+}
