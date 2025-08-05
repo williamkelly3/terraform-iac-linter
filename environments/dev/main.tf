@@ -16,7 +16,7 @@ module "storage" {
 }
 
 module "vnet" {
-  source              = "./modules/vnet"
+  source              = "../../modules/vnet"
   vnet_name           = "my-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
