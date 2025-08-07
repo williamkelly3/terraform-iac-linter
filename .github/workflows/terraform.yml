@@ -34,4 +34,4 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan (dry run)
-        run: terraform plan -out=tfplan -lock=false || true
+        run: terraform plan -out=tfplan -var-file="dev.tfvars" -lock=false || true
