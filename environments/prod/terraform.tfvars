@@ -1,9 +1,9 @@
 location = "eastus"
 
-resource_group_name = "rg-dev-resources"
+resource_group_name = "rg-prod-resources"
 
 tags = {
-  environment = "dev"
+  environment = "prod"
   owner       = "wkelly"
   project     = "iac-demo"
 }
