@@ -32,3 +32,19 @@ resource "azurerm_storage_account" "this" {
 
   tags = var.tags
 }
+
+resource "azurerm_private_endpoint" "this" {
+  count               = var.enable_private_endpoint ? 1 : 0
+  name                = "${var.name}-pe"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
+
+  private_service_connection {
+    name                           = "${var.name}-pe-connection"
+    private_connection_resource_id = azurerm_storage_account.this.id
+    subresource_names              = ["blob"]
+    is_manual_connection           = false
+  }
+}
+
