@@ -42,3 +42,25 @@ variable "subnet_id" {
   default     = null
 }
 
+variable "customer_managed_key_id" {
+  type        = string
+  description = "ID of the customer-managed key (Key Vault)"
+  default     = null
+}
+
+variable "key_vault_id" {
+  type        = string
+  default     = null
+}
+
+variable "customer_managed_key_name" {
+  type    = string
+  default = null
+}
+
+variable "customer_managed_key_version" {
+  type    = string
+  default = null
+}
+
+
