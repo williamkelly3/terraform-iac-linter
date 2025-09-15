@@ -22,9 +22,7 @@ module "vnet" {
 
   dns_servers              = []
   ddos_protection_plan_id  = null
-  tags = {
-    environment = "dev"
-  }
+  tags = var.tags
 }
 
 module "storage" {
@@ -34,7 +32,5 @@ module "storage" {
   location            = var.location
   account_tier        = "Standard"
   replication_type    = "GRS"
-  tags = {
-    environment = "dev"
-  }
+  tags = var.tags
 }
