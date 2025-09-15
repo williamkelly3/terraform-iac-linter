@@ -16,6 +16,7 @@ resource "azurerm_virtual_network" "this" {
   }
 }
 
+# checkov:skip=CKV2_AZURE_31 Reason: NSG is associated via azurerm_subnet_network_security_group_association
 resource "azurerm_subnet" "this" {
   for_each = { for s in var.subnets : s.name => s }
 
