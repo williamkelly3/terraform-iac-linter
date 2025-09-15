@@ -7,7 +7,7 @@ module "storage" {
   account_tier        = "Standard"
   replication_type    = "ZRS"
   tags = {
-    environment = "dev"
+    environment = "prod"
     owner       = "william.kelly"
   }
 }
