@@ -48,3 +48,12 @@ resource "azurerm_private_endpoint" "this" {
   }
 }
 
+resource "azurerm_storage_account_customer_managed_key" "this" {
+  count               = var.customer_managed_key_id != null ? 1 : 0
+  storage_account_id  = azurerm_storage_account.this.id
+  key_vault_id        = var.key_vault_id
+  key_name            = var.customer_managed_key_name
+  key_version         = var.customer_managed_key_version
+}
+
+
