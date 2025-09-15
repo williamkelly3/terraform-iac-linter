@@ -37,3 +37,45 @@ resource "azurerm_subnet" "this" {
     }
   }
 }
+
+# Create an NSG for each subnet
+resource "azurerm_network_security_group" "this" {
+  for_each = azurerm_subnet.this
+
+  name                = "${each.key}-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "Deny-Internet-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Allow-All-Outbound"
+    priority                   = 200
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "Internet"
+  }
+
+  tags = var.tags
+}
+
+# Associate NSGs to subnets
+resource "azurerm_subnet_network_security_group_association" "this" {
+  for_each                  = azurerm_subnet.this
+  subnet_id                 = each.value.id
+  network_security_group_id = azurerm_network_security_group.this[each.key].id
+}
