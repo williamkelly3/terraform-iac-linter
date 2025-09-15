@@ -22,7 +22,7 @@ variable "account_tier" {
 variable "replication_type" {
   description = "The replication type (LRS, GRS, etc)."
   type        = string
-  default     = "LRS"
+  default     = "GRS"
 }
 
 variable "tags" {
