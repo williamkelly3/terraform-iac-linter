@@ -7,7 +7,7 @@ module "storage" {
   account_tier        = "Standard"
   replication_type    = "GRS"
   tags = {
-    environment = "dev"
+    environment = "staging"
     owner       = "william.kelly"
   }
 }
