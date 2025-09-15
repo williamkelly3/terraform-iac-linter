@@ -16,8 +16,28 @@ resource "azurerm_virtual_network" "this" {
   }
 }
 
-resource "azurerm_network_security_group" "this" {
+resource "azurerm_subnet" "this" {
   for_each = { for s in var.subnets : s.name => s }
+
+  name                 = each.value.name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = each.value.address_prefixes
+
+  dynamic "delegation" {
+    for_each = lookup(each.value, "delegations", [])
+    content {
+      name = delegation.value.name
+      service_delegation {
+        name    = delegation.value.service_name
+        actions = delegation.value.actions
+      }
+    }
+  }
+}
+
+resource "azurerm_network_security_group" "this" {
+  for_each = azurerm_subnet.this
 
   name                = "${each.key}-nsg"
   location            = var.location
@@ -50,26 +70,10 @@ resource "azurerm_network_security_group" "this" {
   tags = var.tags
 }
 
-resource "azurerm_subnet" "this" {
-  for_each = { for s in var.subnets : s.name => s }
+resource "azurerm_subnet_network_security_group_association" "this" {
+  for_each = azurerm_subnet.this
 
-  name                 = each.value.name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.this.name
-  address_prefixes     = each.value.address_prefixes
-
-  # Directly attach the NSG
+  subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.this[each.key].id
-
-  # Optional delegation
-  dynamic "delegation" {
-    for_each = lookup(each.value, "delegations", [])
-    content {
-      name = delegation.value.name
-      service_delegation {
-        name    = delegation.value.service_name
-        actions = delegation.value.actions
-      }
-    }
-  }
 }
+
