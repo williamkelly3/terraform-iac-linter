@@ -30,3 +30,15 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_private_endpoint" {
+  type    = bool
+  default = false
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet ID for private endpoint"
+  default     = null
+}
+
