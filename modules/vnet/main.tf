@@ -14,8 +14,6 @@ resource "azurerm_virtual_network" "this" {
       enable = true
     }
   }
-
-  tags = var.tags
 }
 
 # Create multiple subnets
