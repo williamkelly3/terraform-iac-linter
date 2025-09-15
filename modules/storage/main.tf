@@ -6,7 +6,7 @@ resource "azurerm_storage_account" "this" {
   account_replication_type = var.replication_type
 
   # ✅ Security / compliance best practices
-  enable_https_traffic_only      = true
+  https_traffic_only_enabled      = true
   min_tls_version                = "TLS1_2"
   allow_blob_public_access       = false
   shared_access_key_enabled      = false
