@@ -5,7 +5,7 @@ module "storage" {
   resource_group_name = var.resource_group_name
   location            = var.location
   account_tier        = "Standard"
-  replication_type    = "ZRS"
+  replication_type    = "GRS"
   tags = {
     environment = "prod"
     owner       = "william.kelly"
