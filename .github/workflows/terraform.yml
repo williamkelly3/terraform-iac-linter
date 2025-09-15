@@ -35,3 +35,20 @@ jobs:
 
       - name: Terraform Plan (dry run)
         run: terraform plan -out=tfplan -var-file="dev.tfvars" -lock=false || true
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.50.3
+
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint
+
+      # security/compliance
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          framework: terraform
