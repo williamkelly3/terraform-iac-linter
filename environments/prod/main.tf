@@ -1,24 +1,9 @@
-
-module "storage" {
-  source              = "../../modules/storage"
-  name                = "prodstorageacct"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  account_tier        = "Standard"
-  replication_type    = "GRS"
-  tags = {
-    environment = "prod"
-    owner       = "william.kelly"
-  }
-}
-
 module "vnet" {
   source              = "../../modules/vnet"
-  vnet_name           = "my-vnet"
-  address_space       = ["10.30.0.0/16"]
+  vnet_name                = "prod-vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags                = var.tags
+  address_space       = ["10.30.0.0/16"]
 
   subnets = [
     {
@@ -37,4 +22,19 @@ module "vnet" {
 
   dns_servers              = []
   ddos_protection_plan_id  = null
+  tags = {
+    environment = "prod"
+  }
+}
+
+module "storage" {
+  source              = "../../modules/storage"
+  name                = "prodstorageacct"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  account_tier        = "Standard"
+  replication_type    = "GRS"
+  tags = {
+    environment = "prod"
+  }
 }
