@@ -47,6 +47,13 @@ variable "ssh_public_key" {
   type        = string
 }
 
+variable "disk_encryption_set_id" {
+  description = "Optional Disk Encryption Set (backed by Key Vault CMK). If null, defaults to Microsoft-managed keys."
+  type        = string
+  default     = null
+}
+
+
 variable "tags" {
   description = "Tags for the VMSS"
   type        = map(string)
