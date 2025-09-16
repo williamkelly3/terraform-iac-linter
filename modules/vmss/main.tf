@@ -35,6 +35,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   os_disk {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
+    disk_encryption_set_id  = var.disk_encryption_set_id != null ? var.disk_encryption_set_id : null
   }
 
   encryption_at_host_enabled = true
