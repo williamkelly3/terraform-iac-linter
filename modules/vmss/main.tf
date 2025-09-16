@@ -18,6 +18,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     public_key = var.ssh_public_key
   }
 
+  disable_password_authentication = true
+
   network_interface {
     name    = "${var.name}-nic"
     primary = true
@@ -34,6 +36,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
   }
+
+  encryption_at_host_enabled = true
 
   identity {
     type = "SystemAssigned"
