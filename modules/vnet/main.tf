@@ -16,31 +16,17 @@ resource "azurerm_virtual_network" "this" {
   }
 }
 
-# checkov:skip=CKV2_AZURE_31 Reason: NSG is associated via azurerm_subnet_network_security_group_association
 resource "azurerm_subnet" "this" {
-  for_each = { for s in var.subnets : s.name => s }
-
-  name                 = each.value.name
+  count                = length(var.subnets)
+  name                 = var.subnets[count.index].name
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.this.name
-  address_prefixes     = each.value.address_prefixes
-
-  dynamic "delegation" {
-    for_each = lookup(each.value, "delegations", [])
-    content {
-      name = delegation.value.name
-      service_delegation {
-        name    = delegation.value.service_name
-        actions = delegation.value.actions
-      }
-    }
-  }
+  address_prefixes     = var.subnets[count.index].address_prefixes
 }
 
 resource "azurerm_network_security_group" "this" {
-  for_each = azurerm_subnet.this
-
-  name                = "${each.key}-nsg"
+  count               = length(var.subnets)
+  name                = "${var.subnets[count.index].name}-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -67,14 +53,11 @@ resource "azurerm_network_security_group" "this" {
     source_address_prefix      = "*"
     destination_address_prefix = "Internet"
   }
-
-  tags = var.tags
 }
 
 resource "azurerm_subnet_network_security_group_association" "this" {
-  for_each = var.subnets
-
-  subnet_id                 = each.value.id
-  network_security_group_id = azurerm_network_security_group.this[each.key].id
+  count                     = length(var.subnets)
+  subnet_id                 = azurerm_subnet.this[count.index].id
+  network_security_group_id = azurerm_network_security_group.this[count.index].id
 }
 
