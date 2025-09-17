@@ -1,3 +1,12 @@
+module "lb" {
+  source              = "../loadbalancer"
+  name                = "${var.name}-lb"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
+  tags                = var.tags
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "this" {
   name                = var.name
   location            = var.location
@@ -28,7 +37,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
       name                                   = "${var.name}-ipconfig"
       primary                                = true
       subnet_id                              = var.subnet_id
-      load_balancer_backend_address_pool_ids = var.backend_pool_id != null ? [var.backend_pool_id] : []
+      load_balancer_backend_address_pool_ids = [module.lb.backend_pool_id]
     }
   }
 
