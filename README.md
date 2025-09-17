@@ -10,12 +10,31 @@ The goal is to showcase DevOps best practices around code quality, reusability, 
 
 ```
 terraform-iac-linter/
-├── modules/            # Reusable Terraform modules
-│   └── storage/        # Example module for Azure Storage
+├── modules/
+│   ├── storage/
+│   ├── vnet/
+│   ├── vmss/
+│   ├── loadbalancer/
+│   ├── keyvault/
+│   └── monitoring/
+│       ├── main.tf                # Log Analytics + App Insights
+│       ├── variables.tf
+│       ├── outputs.tf
+│       └── diagnostic_settings/
+│           ├── main.tf            # Generic diagnostic settings resource
+│           ├── variables.tf
+│           └── outputs.tf
 ├── environments/
-│   └── dev/            # Dev environment using the storage module
-├── .github/workflows/  # GitHub Actions CI pipeline
-└── README.md
+│   ├── dev/
+│   │   ├── main.tf
+│   │   └── provider.tf
+│   ├── staging/
+│   │   ├── main.tf
+│   │   └── provider.tf
+│   └── prod/
+│       ├── main.tf
+│       └── provider.tf
+
 ```
 
 ---
