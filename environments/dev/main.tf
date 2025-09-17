@@ -1,6 +1,6 @@
 module "vnet" {
   source              = "../../modules/vnet"
-  vnet_name                = "dev-vnet"
+  name                = "dev-vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
 
