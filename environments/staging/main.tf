@@ -1,6 +1,6 @@
 module "vnet" {
   source              = "../../modules/vnet"
-  vnet_name                = "staging-vnet"
+  name                = "staging-vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.20.0.0/16"]
