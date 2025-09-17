@@ -66,7 +66,7 @@ The `modules/storage` folder contains a reusable Terraform module that defines a
 
 1. Clone the repo:
 ```bash
-git clone https://github.com/yourusername/terraform-iac-linter.git
+git clone https://github.com/williamkelly3/terraform-iac-linter.git
 cd terraform-iac-linter/environments/dev
 ```
 
