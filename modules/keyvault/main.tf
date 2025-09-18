@@ -39,6 +39,7 @@ resource "azurerm_key_vault" "this" {
 
       secret_permissions = ["Get", "List"]
     }
+  }
 
   tags = var.tags
 }
