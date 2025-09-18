@@ -30,17 +30,6 @@ resource "azurerm_key_vault" "this" {
     ]
   }
 
-# Conditional policy for VMSS managed identity
-  dynamic "access_policy" {
-    for_each = var.vmss_identity_principal_id != null ? [var.vmss_identity_principal_id] : []
-    content {
-      tenant_id = data.azurerm_client_config.current.tenant_id
-      object_id = access_policy.value
-
-      secret_permissions = ["Get", "List"]
-    }
-  }
-
   tags = var.tags
 }
 
@@ -90,14 +79,6 @@ resource "azurerm_private_endpoint" "this" {
     subresource_names              = ["vault"]
     is_manual_connection           = false
   }
-}
-
-resource "azurerm_key_vault_access_policy" "vmss" {
-  key_vault_id = azurerm_key_vault.this.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.vmss_identity_principal_id
-
-  secret_permissions = ["Get", "List"]
 }
 
 resource "azurerm_key_vault_secret" "app_password" {
