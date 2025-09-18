@@ -61,6 +61,7 @@ module "keyvault" {
 
   create_private_endpoint      = false
   network_acls_vnet_subnet_ids = [module.vnet.subnet_ids["mgmt"]]
+  vmss_identity_principal_id = module.vmss.identity_principal_id
 
   tags = var.tags
 }
