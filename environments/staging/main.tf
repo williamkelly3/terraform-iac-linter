@@ -51,6 +51,8 @@ module "vmss" {
   instance_count = 2
   admin_username = "azureuser"
   ssh_public_key = var.ssh_public_key
+  vault_name = module.keyvault.name
+  vault_uri  = module.keyvault.uri
 
   tags = var.tags
 }
