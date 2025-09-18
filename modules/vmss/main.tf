@@ -53,7 +53,13 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     type = "SystemAssigned"
   }
 
-  custom_data = base64encode(file("${path.module}/cloud-init.sh"))
+  custom_data = base64encode(
+  templatefile("${path.module}/cloud-init.sh", {
+    vault_name = var.vault_name
+    vault_uri  = var.vault_uri
+  })
+)
+
 
   upgrade_mode = "Automatic"
 
