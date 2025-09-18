@@ -1,3 +1,9 @@
+resource "azurerm_resource_group" "this" {
+  name     = "rg-prod"
+  location = var.location
+  tags     = var.tags
+}
+
 module "policy" {
   source = "../../modules/policy"
   scope  = azurerm_resource_group.this.id
