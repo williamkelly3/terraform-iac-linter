@@ -1,40 +1,26 @@
 #!/bin/bash
-set -e
-
 # Update system
 apt-get update -y
-apt-get upgrade -y
 
-# Install dependencies
-apt-get install -y curl jq
-
-# Install Azure CLI
+# Install nginx and Azure CLI
+apt-get install -y nginx curl
 curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# Login with Managed Identity (no creds needed)
-az login --identity --allow-no-subscriptions
-
-# Variables (injected by Terraform via custom_data if needed)
-VAULT_NAME="${vault_name}"
-SECRET_NAME="db-password"
-
-# Fetch secret value
-SECRET_VALUE=$(az keyvault secret show \
-  --vault-name "$VAULT_NAME" \
-  --name "$SECRET_NAME" \
-  --query value -o tsv)
-
-# Store secret in environment for apps
-echo "DB_PASSWORD=${SECRET_VALUE}" >> /etc/environment
-
-# Optionally write to a config file for services
-mkdir -p /etc/myapp
-echo "db_password=${SECRET_VALUE}" > /etc/myapp/config.ini
-
-# Example: Install Nginx as placeholder web app
-apt-get install -y nginx
+# Start nginx
 systemctl enable nginx
 systemctl start nginx
 
-# Drop a simple page showing secret was retrieved (for demo only!)
-echo "<h1>VMSS Node Running</h1><p>Fetched secret from Key Vault ✅</p>" > /var/www/html/index.html
+# Web page with hostname
+echo "<h1>Hello from Terraform VMSS in $(hostname)</h1>" > /var/www/html/index.html
+
+# Login with Managed Identity
+az login --identity
+
+# Fetch secret from Key Vault (provided by Terraform template)
+APP_SECRET=$(az keyvault secret show \
+  --name app-password \
+  --vault-name ${vault_name} \
+  --query value -o tsv)
+
+# Write secret to env for app (mock example)
+echo "APP_SECRET=${APP_SECRET}" >> /etc/environment
