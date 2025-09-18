@@ -100,3 +100,8 @@ resource "azurerm_key_vault_access_policy" "vmss" {
   secret_permissions = ["Get", "List"]
 }
 
+resource "azurerm_key_vault_secret" "app_password" {
+  name         = "app-password"
+  value        = "SuperSecurePassword123!"
+  key_vault_id = azurerm_key_vault.this.id
+}
