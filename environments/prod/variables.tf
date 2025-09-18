@@ -10,6 +10,11 @@ variable "resource_group_name" {
   default     = "rg-prod-resources"
 }
 
+variable "ssh_public_key" {
+  description = "SSH public key for VMSS admin access."
+  type        = string
+}
+
 variable "tags" {
   description = "Tags to apply to resources."
   type        = map(string)
