@@ -53,6 +53,10 @@ variable "disk_encryption_set_id" {
   default     = null
 }
 
+variable "vault_name" {
+  type = string
+}
+
 
 variable "tags" {
   description = "Tags for the VMSS"
