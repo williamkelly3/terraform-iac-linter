@@ -80,3 +80,12 @@ resource "azurerm_private_endpoint" "this" {
     is_manual_connection           = false
   }
 }
+
+resource "azurerm_key_vault_access_policy" "vmss" {
+  key_vault_id = azurerm_key_vault.this.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.vmss_identity_principal_id
+
+  secret_permissions = ["Get", "List"]
+}
+
