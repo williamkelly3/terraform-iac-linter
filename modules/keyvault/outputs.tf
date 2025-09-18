@@ -1,3 +1,8 @@
+output "name" {
+  description = "The name of the Key Vault"
+  value       = azurerm_key_vault.this.name
+}
+
 output "vault_id" {
   description = "ID of the Key Vault"
   value       = azurerm_key_vault.this.id
