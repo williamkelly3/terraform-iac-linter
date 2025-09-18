@@ -1,3 +1,8 @@
+module "policy" {
+  source = "../../modules/policy"
+  scope  = azurerm_resource_group.this.id
+}
+
 module "vnet" {
   source              = "../../modules/vnet"
   name                = "prod-vnet"
