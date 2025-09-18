@@ -19,6 +19,13 @@ variable "sku_name" {
   default     = "standard"
 }
 
+variable "vmss_identity_principal_id" {
+  description = "The Principal ID of the VMSS managed identity for Key Vault access"
+  type        = string
+  default     = null
+}
+
+
 variable "soft_delete_retention_days" {
   description = "Number of days that soft-deleted keys and secrets are retained."
   type        = number
