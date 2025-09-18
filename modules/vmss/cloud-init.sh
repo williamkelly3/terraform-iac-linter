@@ -24,4 +24,4 @@ APP_SECRET=$(az keyvault secret show \
 
 # Write secret to env for app (mock example)
 echo "VAULT_URI=${vault_uri}" >> /etc/environment
-echo "APP_SECRET=${APP_SECRET}" >> /etc/environment
+echo "APP_SECRET=$${APP_SECRET}" >> /etc/environment
