@@ -57,6 +57,12 @@ variable "vault_name" {
   type = string
 }
 
+variable "vault_uri" {
+  description = "URI of the Key Vault for retrieving secrets"
+  type        = string
+  default     = null
+}
+
 
 variable "tags" {
   description = "Tags for the VMSS"
