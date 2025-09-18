@@ -22,3 +22,8 @@ output "des_id" {
   description = "ID of the disk encryption set (if created)"
   value       = try(azurerm_disk_encryption_set.this[0].id, null)
 }
+
+output "secret_id" {
+  description = "The ID of the app password secret"
+  value       = azurerm_key_vault_secret.app_password.id
+}
