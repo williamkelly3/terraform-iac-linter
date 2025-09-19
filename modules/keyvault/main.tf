@@ -85,4 +85,6 @@ resource "azurerm_key_vault_secret" "app_password" {
   name         = "app-password"
   value        = "SuperSecurePassword123!"
   key_vault_id = azurerm_key_vault.this.id
+  content_type    = "password"
+  expiration_date = timeadd(timestamp(), "8760h") # expires in ~1 year
 }
