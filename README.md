@@ -1,6 +1,7 @@
 # 🧱 Terraform IaC Linter Project
 
-This project demonstrates clean, modular Infrastructure as Code (IaC) using **Terraform** for provisioning Azure resources, along with automated validation and formatting using **GitHub Actions**.
+This project provisions a **production-like Azure environment** using Terraform.  
+It demonstrates **infrastructure as code (IaC)** best practices, security/compliance scanning, and GitHub Actions CI/CD.
 
 The goal is to showcase DevOps best practices around code quality, reusability, and CI/CD automation — without needing to actually deploy resources to a cloud provider.
 
@@ -10,72 +11,115 @@ The goal is to showcase DevOps best practices around code quality, reusability, 
 
 ```
 terraform-iac-linter/
-├── modules/
-│   ├── storage/
-│   ├── vnet/
-│   ├── vmss/
-│   ├── loadbalancer/
-│   ├── keyvault/
-│   └── monitoring/
-│       ├── main.tf                # Log Analytics + App Insights
-│       ├── variables.tf
-│       ├── outputs.tf
-│       └── diagnostic_settings/
-│           ├── main.tf            # Generic diagnostic settings resource
-│           ├── variables.tf
-│           └── outputs.tf
 ├── environments/
 │   ├── dev/
 │   │   ├── main.tf
-│   │   └── provider.tf
+│   │   ├── providers.tf
+│   │   ├── variables.tf
+│   │   └── terraform.tfvars
 │   ├── staging/
-│   │   ├── main.tf
-│   │   └── provider.tf
 │   └── prod/
-│       ├── main.tf
-│       └── provider.tf
+│
+├── modules/
+│   ├── vnet/                # Virtual Network + Subnets + NSGs
+│   ├── storage/             # Storage Account (secure defaults)
+│   ├── vmss/                # Linux Virtual Machine Scale Set (with cloud-init)
+│   ├── loadbalancer/        # Public Load Balancer for VMSS
+│   ├── keyvault/            # Key Vault + Secrets + CMK
+│   ├── monitoring/
+│   │   ├── log_analytics/   # Centralized Log Analytics Workspace
+│   │   └── diagnostic_settings/ # Diagnostic Settings for resources
+│   └── policy/              # Azure Policy assignments (TLS enforcement)
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions pipeline
+│
+├── cloud-init.sh            # Bootstrap script for VMSS
+└── README.md
 
 ```
 
 ---
 
-## ⚙️ GitHub Actions Workflow
+## 🚀 Features
 
-The CI pipeline automatically runs on push and pull requests to `main`:
-- `terraform fmt -check`: Enforces consistent code formatting
-- `terraform init`: Initializes Terraform configuration
-- `terraform validate`: Validates syntax and configuration
-- `terraform plan`: Runs a dry-run plan (non-deploying)
+- Multi-environment design (**dev**, **staging**, **prod**)
+- Reusable **Terraform modules** for Azure resources
+- **Security-first defaults**:
+  - NSGs on subnets
+  - HTTPS-only access
+  - Enforce TLS 1.2+
+  - Private endpoints
+  - Customer Managed Key (CMK) support
+- **Key Vault** with secret rotation & expiration
+- **VMSS with Load Balancer** to simulate a web tier
+- **Monitoring / Observability**:
+  - Log Analytics
+  - Diagnostic Settings
+- **Compliance scanning** with:
+  - [TFLint](https://github.com/terraform-linters/tflint) (linting)
+  - [Checkov](https://www.checkov.io/) (policy as code)
+  - `terraform fmt` and `terraform validate` checks
+- **CI/CD** pipeline via **GitHub Actions**
+
+---
+
+## 🛠️ Prerequisites
+
+- [Terraform CLI](https://developer.hashicorp.com/terraform/downloads) `>= 1.6.0`
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [tflint](https://github.com/terraform-linters/tflint)
+- [Checkov](https://github.com/bridgecrewio/checkov)
+
 
 No Azure credentials or cloud access are required, this workflow is sandboxed for code-only validation.
 
 ---
 
-## 📦 Module Overview: Azure Storage
+## 🔒 Security Best Practices Implemented
 
-The `modules/storage` folder contains a reusable Terraform module that defines an `azurerm_storage_account`. It uses variables for:
-- Storage account name
-- Resource group
-- Location
-- Tier and replication
-- Tags
+- **Storage Accounts**
+  - HTTPS only
+  - Private endpoint support
+  - Customer Managed Key (CMK) encryption
+
+- **VMSS**
+  - Host encryption enabled
+  - SSH key authentication only (no passwords)
+  - System-assigned managed identity
+
+- **Key Vault**
+  - Public network access disabled
+  - Firewall rules enforced
+  - Secrets & keys with expiration dates
+
+- **VNET/Subnets**
+  - NSG attached to each subnet
+  - No inbound internet access by default
+
+- **Azure Policy**
+  - Enforces TLS 1.2+ on supported resources
 
 ---
 
-## 🧪 How to Use Locally
+## 🤖 CI/CD (GitHub Actions)
 
-1. Clone the repo:
-```bash
-git clone https://github.com/williamkelly3/terraform-iac-linter.git
-cd terraform-iac-linter/environments/dev
-```
+The pipeline (.github/workflows/ci.yml) runs on pull requests and pushes:
+  1. terraform fmt -check
+  2. terraform validate
+  3. tflint
+  4. checkov
+  5. (Optional) terraform plan
 
-2. Run the standard Terraform workflow:
-```bash
-terraform init
-terraform validate
-terraform plan
-```
+To trigger, simply push changes to a branch or open a PR.
+
+---
+
+## 📊 Monitoring & Observability
+- Log Analytics Workspace centralizes logs/metrics
+- Diagnostic Settings forward logs from Storage, Key Vault, and VMSS
+- Ready for integration with Azure Monitor or App Insights
 
 ---
 
@@ -85,3 +129,10 @@ terraform plan
 - Modular code design and reusability
 - CI/CD automation with GitHub Actions
 - Code validation and formatting enforcement
+
+---
+
+## 📘 Notes
+- Each environment (dev, staging, prod) has its own terraform.tfvars for isolation.
+- Modules are designed to be reusable across projects.
+- This repo is meant as a learning + demo project, but implements real production-grade practices.
